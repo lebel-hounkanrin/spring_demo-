@@ -2,7 +2,26 @@ package com.example.demo.student;
 
 import java.time.LocalDate;
 
+import org.springframework.data.relational.core.mapping.Table;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
+
+@Entity
+@Table
 public class Student {
+    @Id
+    @SequenceGenerator(
+        name = "student_sequence",
+        sequenceName = "student_sequence",
+        allocationSize = 1
+    )
+    @GeneratedValue(
+        strategy = GenerationType.SEQUENCE
+    )
     private Long id;
     private String name;
     private String email;
