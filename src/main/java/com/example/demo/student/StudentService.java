@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class StudentService {
@@ -33,7 +34,23 @@ public class StudentService {
     studentRepository.deleteById(studentId);
   }
 
+  @Transactional
   public void updateStudent(Long id, String name, String email){
-    
+      Student student = studentRepository.findById(id).orElseThrow(
+        () -> new IllegalStateException("Student with id " + id + " does not exist")
+      );
+
+      if(name !=null && name.length() > 0 && student.getName() != name){
+        student.setName(name);
+      }
+
+      if(email !=null && email.length() > 0 && student.getEmail() != email){
+        Optional<Student> studentOptinal  = studentRepository.findStudentByEmail(email);
+        if(studentOptinal.isPresent()){
+          throw new IllegalStateException("Email already taken");
+        }
+        student.setEmail(email);
+      }
+
   }
 }
